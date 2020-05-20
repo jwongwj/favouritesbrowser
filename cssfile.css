@@ -1,0 +1,12 @@
+.icon {
+    border: black;
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+}
+
+.alignCenter {
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}

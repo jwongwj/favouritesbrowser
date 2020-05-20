@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- #region CDN / Stylesheets-->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
+      rel="stylesheet"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
+    />
+    <link rel="stylesheet" type="text/css" href="cssfile.css" />
+    <!-- #endregion -->
+  </head>
+  <body>
+    <div id="app">
+      <v-app>
+        <v-card class="overflow-hidden" style="overflow-x: hidden;">
+          <v-app-bar
+            absolute
+            color="white"
+            elevate-on-scroll
+            scroll-target="#scrolling-techniques-3"
+          >
+            <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+
+            <v-toolbar-title>Favourites</v-toolbar-title>
+
+            <v-spacer></v-spacer>
+
+            <v-menu offset-y>
+              <template v-slot:activator="{ on }">
+                <v-btn icon color="primary" dark v-on="on">
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-for="(item, index) in menuItems"
+                  :key="index"
+                  @click="executeMenuAction(item.method, '')"
+                >
+                  <v-list-item-title>
+                    <v-list-item-icon>
+                      <v-icon>
+                        {{item.icon}}
+                      </v-icon>
+                    </v-list-item-icon>
+                    {{item.buttonName}}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-app-bar>
+          <v-sheet
+            id="scrolling-techniques-7"
+            class="overflow-y-auto"
+            max-height="100vh"
+          >
+            <v-container @contextmenu.prevent="">
+              <template>
+                <v-row justify="center">
+                  <v-dialog v-model="dialog" persistent max-width="600px">
+                    <v-card>
+                      <v-card-title>
+                        <span class="headline">Bookmarks</span>
+                      </v-card-title>
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="2" sm="4" md="2">
+                              <img :src="setFavImg" class="icon" />
+                            </v-col>
+                            <v-col cols="10" sm="8" md="10">
+                              <v-text-field
+                                label="Url"
+                                required
+                                v-model="item.url"
+                                :v-value="item.url"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                              <v-text-field
+                                label="Name"
+                                v-model="item.name"
+                                :v-value="item.name"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                              <v-text-field
+                                label="Description"
+                                v-model="item.description"
+                                :v-value="item.description"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="red darken-1" text @click="close(true)"
+                          >Close</v-btn
+                        >
+                        <v-btn color="blue darken-1" text @click="save()"
+                          >Save</v-btn
+                        >
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-row>
+              </template>
+              <v-row style="padding-top: 8vh;">
+                <v-card
+                  class="mx-auto"
+                  max-width="800"
+                  width="60vw"
+                  height="89vh"
+                  tile
+                >
+                  <v-toolbar flat>
+                    <v-text-field
+                      label="Search"
+                      append-icon="mdi-magnify"
+                      v-model="search"
+                    ></v-text-field>
+                  </v-toolbar>
+                  <v-list dense two-line shaped avatar rounded>
+                    <v-list-item-group color="primary">
+                      <div class="alignCenter" v-if="checkItems()">
+                        <span> No data available </span>
+                      </div>
+                      <div v-else>
+                        <v-list-item
+                          v-for="(itemList, i) in filteredList"
+                          :key="i"
+                          @dblclick="navigateURL(itemList.url)"
+                        >
+                          <v-list-item-avatar>
+                            <v-img :src="getImage(itemList.url)"></v-img>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title
+                              v-html="itemList.name"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              v-html="itemList.description"
+                            ></v-list-item-subtitle>
+                          </v-list-item-content>
+                          <v-list-item-action>
+                            <v-menu offset-y>
+                              <template v-slot:activator="{ on }">
+                                <v-btn icon color="primary" dark v-on="on">
+                                  <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                              </template>
+                              <v-list>
+                                <v-list-item
+                                  v-for="(menuItem, index) in listMenu"
+                                  :key="index"
+                                  @click="executeMenuAction(menuItem.method, itemList)"
+                                >
+                                  <v-list-item-title>
+                                    <v-list-item-icon>
+                                      <v-icon color="grey lighten-1"
+                                        >{{menuItem.icon}}</v-icon
+                                      >
+                                    </v-list-item-icon>
+                                    {{menuItem.buttonName}}
+                                  </v-list-item-title>
+                                </v-list-item>
+                              </v-list>
+                            </v-menu>
+                          </v-list-item-action>
+                        </v-list-item>
+                      </div>
+                    </v-list-item-group>
+                  </v-list>
+                </v-card>
+              </v-row>
+            </v-container>
+          </v-sheet>
+        </v-card>
+      </v-app>
+    </div>
+    <!-- #region CDN / Vue  -->
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="jsfile.js"></script>
+
+    <!-- #endregion -->
+  </body>
+</html>
