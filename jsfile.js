@@ -2,6 +2,7 @@ const ADD_FAVE_ACTION = "addFave";
 const EDIT_FAVE_ACTION = "editFave";
 const DEL_FAVE_ACTION = "deleteFave";
 const DEL_ALL_ACTION = "deleteAll";
+const OPEN_URL_ACTION = "openUrl";
 var localStorage = window.localStorage;
 
 var app = new Vue({
@@ -31,6 +32,11 @@ var app = new Vue({
         buttonName: "Delete",
         method: DEL_FAVE_ACTION,
         icon: "mdi-delete-variant",
+      },
+      {
+        buttonName: "Open URL",
+        method: OPEN_URL_ACTION,
+        icon: "mdi-arrow-top-left-bold-outline",
       },
     ],
     dialog: false,
@@ -71,6 +77,8 @@ var app = new Vue({
         case DEL_ALL_ACTION:
           this.delAll();
           break;
+        case OPEN_URL_ACTION:
+          this.navigateURL(item.url);
       }
     },
     delAll() {
