@@ -2,6 +2,8 @@
 <html>
   <head>
     <!-- #region CDN / Stylesheets-->
+    <script src="https://cdn.bootcss.com/babel-polyfill/6.23.0/polyfill.min.js"></script>
+
     <link
       href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
       rel="stylesheet"
@@ -14,13 +16,16 @@
       href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css"
       rel="stylesheet"
     />
+
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"
     />
-    <link rel="stylesheet" type="text/css" href="cssfile.css" />
+    <link rel="stylesheet" type="text/css" href="/cssfile.css" />
 
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <meta http-equiv="Cache-control" content="public" />
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
 
     <title>Favourites</title>
     <!-- #endregion -->
@@ -42,16 +47,17 @@
             <v-spacer></v-spacer>
 
             <v-menu offset-y>
-              <template v-slot:activator="{ on }">
-                <v-btn icon color="primary" dark v-on="on">
+              <template v-slot:activator="on" style="display: none;">
+                <v-btn icon color="primary" dark v-on="on.on">
                   <v-icon>mdi-dots-vertical</v-icon>
                 </v-btn>
               </template>
-              <v-list>
+              <v-list style="display: inline-block;">
                 <v-list-item
                   v-for="(item, index) in menuItems"
                   :key="index"
                   @click="executeMenuAction(item.method, '')"
+                  style="display: block;"
                 >
                   <v-list-item-title>
                     <v-list-item-icon>
@@ -71,7 +77,7 @@
             max-height="100vh"
           >
             <v-container @contextmenu.prevent="">
-              <template>
+              <template style="display: none;">
                 <v-row justify="center">
                   <v-dialog v-model="dialog" persistent max-width="600px">
                     <v-card>
@@ -146,7 +152,7 @@
                         <v-list-item
                           v-for="(itemList, i) in filteredList"
                           :key="i"
-                          @dblclick="navigateURL(itemList.url)"
+                          @click="navigateURL(itemList.url)"
                         >
                           <v-list-item-avatar>
                             <v-img :src="getImage(itemList.url)"></v-img>
@@ -162,16 +168,20 @@
                           </v-list-item-content>
                           <v-list-item-action>
                             <v-menu offset-y>
-                              <template v-slot:activator="{ on }">
-                                <v-btn icon color="primary" dark v-on="on">
+                              <template
+                                v-slot:activator="on"
+                                style="display: none;"
+                              >
+                                <v-btn icon color="primary" dark v-on="on.on">
                                   <v-icon>mdi-dots-vertical</v-icon>
                                 </v-btn>
                               </template>
-                              <v-list>
+                              <v-list style="display: inline-block;">
                                 <v-list-item
                                   v-for="(menuItem, index) in listMenu"
                                   :key="index"
                                   @click="executeMenuAction(menuItem.method, itemList)"
+                                  style="display: block;"
                                 >
                                   <v-list-item-title>
                                     <v-list-item-icon>
@@ -200,7 +210,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script src="jsfile.js"></script>
+    <script src="/jsfile.js"></script>
 
     <!-- #endregion -->
   </body>

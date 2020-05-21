@@ -55,13 +55,13 @@ var app = new Vue({
     search: "",
   },
   methods: {
-    checkItems() {
+    checkItems: function () {
       if (this.items == "") {
         return true;
       }
       return this.items.length == 0;
     },
-    executeMenuAction(action, item) {
+    executeMenuAction: function (action, item) {
       switch (action) {
         case ADD_FAVE_ACTION:
           this.addFave();
@@ -81,17 +81,17 @@ var app = new Vue({
           this.navigateURL(item.url);
       }
     },
-    delAll() {
+    delAll: function () {
       localStorage.clear();
       this.items = [];
     },
-    addFave() {
+    addFave: function () {
       this.dialog = true;
     },
-    navigateURL(url) {
+    navigateURL: function (url) {
       window.open(url);
     },
-    close(revert) {
+    close: function (revert) {
       if (revert) {
         this.items = this.replaceArray(this.item, this.oldItem, this.items);
       }
@@ -108,7 +108,7 @@ var app = new Vue({
       this.dialog = false;
       this.onEdit = false;
     },
-    save() {
+    save: function () {
       this.item.url = this.decodeUrl(this.item.url);
 
       if (this.onEdit == false) {
@@ -123,23 +123,23 @@ var app = new Vue({
       localStorage.setItem("faveItems", JSON.stringify(this.items));
       this.close(false);
     },
-    getImage(url) {
+    getImage: function (url) {
       return "https://s2.googleusercontent.com/s2/favicons?domain=" + url;
     },
-    editFave(item) {
+    editFave: function (item) {
       this.oldItem = item;
       this.item = Object.assign({}, item);
       this.dialog = true;
       this.onEdit = true;
     },
-    delFave(item) {
+    delFave: function (item) {
       var index = this.items.indexOf(item);
       if (index > -1) {
         this.items.splice(index, 1);
       }
       localStorage.setItem("faveItems", JSON.stringify(this.items));
     },
-    decodeUrl(url) {
+    decodeUrl: function (url) {
       if (url === "") {
         return "www";
       }
@@ -148,14 +148,14 @@ var app = new Vue({
       newUrl = newUrl.trim().replace(/\s/g, "");
 
       if (/^(:\/\/)/.test(newUrl)) {
-        return `https${newUrl}`;
+        return "https" + newUrl;
       }
       if (!/^(f|ht)tps?:\/\//i.test(newUrl)) {
-        return `https://${newUrl}`;
+        return "https://" + newUrl;
       }
       return url;
     },
-    replaceArray(oldItem, newItem, array) {
+    replaceArray: function (oldItem, newItem, array) {
       var index = this.items.indexOf(oldItem);
       if (index > -1) {
         array[index] = newItem;
@@ -172,32 +172,33 @@ var app = new Vue({
         "https://s2.googleusercontent.com/s2/favicons?domain=" + this.item.url
       );
     },
-    filteredList() {
-      return this.items.filter((i) => {
+    filteredList: function () {
+      var search = this.search;
+      return this.items.filter(function (i) {
         if (i == null) {
           return;
         }
         return (
           (i.url != null &&
-            i.url.toLowerCase().includes(this.search.toLowerCase())) ||
+            i.url.toLowerCase().includes(search.toLowerCase())) ||
           (i.name != null &&
-            i.name.toLowerCase().includes(this.search.toLowerCase())) ||
+            i.name.toLowerCase().includes(search.toLowerCase())) ||
           (i.description != null &&
-            i.description.toLowerCase().includes(this.search.toLowerCase()))
+            i.description.toLowerCase().includes(search.toLowerCase()))
         );
       });
     },
   },
-  created() {
+  created: function () {
     const that = this;
 
-    document.addEventListener("keyup", (evt) => {
+    document.addEventListener("keyup", function (evt) {
       if (evt.keyCode === 27) {
         that.close(true);
       }
     });
 
-    document.addEventListener("keyup", (evt) => {
+    document.addEventListener("keyup", function (evt) {
       if (evt.keyCode === 13 && that.dialog) {
         that.save();
       }
